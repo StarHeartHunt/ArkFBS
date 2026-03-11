@@ -1,4 +1,4 @@
-name: wheels
+name: Build and publish wheels
 
 on:
   workflow_dispatch:
@@ -48,7 +48,6 @@ jobs:
         uses: pypa/cibuildwheel@v3.4.0
         env:
           CIBW_TEST_SKIP: "*"
-          CIBW_SKIP: "pp* cp3*t-*"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -75,7 +74,7 @@ jobs:
         uses: pypa/cibuildwheel@v3.4.0
         env:
           CIBW_TEST_SKIP: "*"
-          CIBW_SKIP: "pp* cp3*t-* *-musllinux*"
+          CIBW_SKIP: "*-musllinux*"
 
       - uses: actions/upload-artifact@v4
         with:
