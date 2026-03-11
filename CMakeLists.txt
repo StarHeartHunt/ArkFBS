@@ -43,10 +43,6 @@ if(ARK_FBS_VENDOR_FLATBUFFERS)
   target_compile_options(flatbuffers_warning_relax INTERFACE
     # Required when linking flatbuffers static lib into _ark_fbs .so
     $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-fPIC>
-    $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:
-      -Wno-error=unused-parameter
-      -Wno-error=missing-declarations
-    >
   )
   if(TARGET flatbuffers)
     target_link_libraries(flatbuffers PRIVATE flatbuffers_warning_relax)
