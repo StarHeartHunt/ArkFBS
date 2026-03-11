@@ -8,7 +8,7 @@ on:
 jobs:
   build_sdist:
     name: Build source distribution
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     steps:
       - uses: actions/checkout@v6
         with:
@@ -37,7 +37,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest]
+        os: [blacksmith-2vcpu-windows-2025, macos-latest]
 
     steps:
       - uses: actions/checkout@v6
@@ -58,7 +58,7 @@ jobs:
 
   build_manylinux_wheels_ubuntu:
     name: Build manylinux wheels on ubuntu-latest
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     needs: [build_sdist]
 
     steps:
@@ -87,7 +87,7 @@ jobs:
     if: github.event_name == 'release'
     name: Publish to PyPI
     needs: [build_sdist, build_wheels, build_manylinux_wheels_ubuntu]
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     permissions:
       id-token: write
 
