@@ -25,7 +25,7 @@ jobs:
           python-version: "3.x"
 
       - name: Build sdist
-        run: uv tool run build --sdist
+        run: uv build --sdist
 
       - uses: actions/upload-artifact@v4
         with:
