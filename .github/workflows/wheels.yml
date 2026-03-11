@@ -50,7 +50,7 @@ jobs:
         uses: pypa/cibuildwheel@v3.4.0
         env:
           CIBW_TEST_SKIP: "*"
-          CIBW_SKIP: "pp*"
+          CIBW_SKIP: "pp* cp3*t-*"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -77,7 +77,7 @@ jobs:
         uses: pypa/cibuildwheel@v3.4.0
         env:
           CIBW_TEST_SKIP: "*"
-          CIBW_SKIP: "pp* *-musllinux*"
+          CIBW_SKIP: "pp* cp3*t-* *-musllinux*"
 
       - uses: actions/upload-artifact@v4
         with:

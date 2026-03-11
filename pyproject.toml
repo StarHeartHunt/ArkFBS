@@ -37,7 +37,7 @@ archs = ["x86_64", "i686"]
 archs = ["x86_64", "arm64"]
 
 [tool.cibuildwheel.windows]
-archs = ["AMD64", "ARM64"]
+archs = ["AMD64", "x86", "ARM64"]
 
 [build-system]
 requires = [
