@@ -16,9 +16,8 @@ This is a standalone PyPI package that provides a thin `pybind11` wrapper around
 ## Local build (editable)
 
 ```bash
-python -m pip install -U pip
-python -m pip install -U build scikit-build-core pybind11
-python -m pip install -e .
+uv sync --group dev
+uv pip install -e .
 ```
 
 ## Usage

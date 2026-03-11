@@ -6,13 +6,13 @@ requires = [
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "flatbuffers-idl"
+name = "ark-fbs"
 version = "0.1.0"
 description = "FlatBuffers schema parsing + JSON<->binary helpers (pybind11)"
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "Apache-2.0" }
-authors = [{ name = "Your Name" }]
+authors = [{ name = "StarHeartHunt" }]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: C++",
@@ -22,6 +22,14 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://example.com"
+
+[dependency-groups]
+dev = [
+  "build>=1.0.0",
+  "scikit-build-core>=0.10",
+  "pybind11>=2.13.6",
+  "pytest>=8.0.0",
+]
 
 [tool.scikit-build]
 cmake.minimum-version = "3.15"
