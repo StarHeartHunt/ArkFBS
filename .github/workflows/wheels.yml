@@ -47,7 +47,7 @@ jobs:
           submodules: recursive
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.21.3
+        uses: pypa/cibuildwheel@v3.4.0
         env:
           CIBW_TEST_SKIP: "*"
           CIBW_SKIP: "pp*"
@@ -74,7 +74,7 @@ jobs:
           platforms: all
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.21.3
+        uses: pypa/cibuildwheel@v3.4.0
         env:
           CIBW_TEST_SKIP: "*"
           CIBW_SKIP: "pp* *-musllinux*"
