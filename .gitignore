@@ -1,0 +1,23 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.dylib
+*.dll
+.DS_Store
+
+.venv/
+venv/
+
+build/
+dist/
+wheelhouse/
+*.egg-info/
+
+# scikit-build-core / CMake
+_skbuild/
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+

@@ -1,0 +1,42 @@
+[build-system]
+requires = [
+  "scikit-build-core>=0.10",
+  "pybind11>=2.13.6",
+]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "flatbuffers-idl"
+version = "0.1.0"
+description = "FlatBuffers schema parsing + JSON<->binary helpers (pybind11)"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Your Name" }]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: C++",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://example.com"
+
+[tool.scikit-build]
+cmake.minimum-version = "3.15"
+cmake.build-type = "Release"
+wheel.packages = ["src/flatbuffers_idl"]
+
+[tool.scikit-build.cmake.define]
+FLATBUFFERS_IDL_VENDOR_FLATBUFFERS = "ON"
+
+[tool.cibuildwheel]
+build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
+skip = "pp* *-musllinux_*"
+test-command = "python -c \"import flatbuffers_idl; s=flatbuffers_idl.Schema.from_fbs_text('namespace t; table A { x:int; } root_type A;'); b=s.json_to_binary('{\\\"x\\\":1}'); j=s.binary_to_json(b); assert '\"x\"' in j\""
+
+[tool.cibuildwheel.linux]
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+
