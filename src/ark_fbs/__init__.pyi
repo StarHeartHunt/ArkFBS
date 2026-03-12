@@ -9,7 +9,15 @@ class Options:
     size_prefixed: bool
     output_enum_identifiers: bool
 
-    def __init__(self) -> None: ...
+    def __init__(
+        self,
+        *,
+        strict_json: bool = True,
+        natural_utf8: bool = True,
+        defaults_json: bool = True,
+        size_prefixed: bool = False,
+        output_enum_identifiers: bool = True,
+    ) -> None: ...
 
 class Schema:
     @staticmethod

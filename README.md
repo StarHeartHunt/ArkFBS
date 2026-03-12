@@ -59,10 +59,13 @@ print(schema.binary_to_json(data))
 ```python
 import ark_fbs
 
-opts = ark_fbs.Options()
-opts.strict_json = True
-opts.defaults_json = True
-opts.size_prefixed = False
+opts = ark_fbs.Options(  # keyword-only
+    strict_json=True,
+    natural_utf8=True,
+    defaults_json=True,
+    size_prefixed=False,
+    output_enum_identifiers=True,
+)
 
 schema = ark_fbs.Schema.from_fbs_text(
     "namespace t; table A { x:int; } root_type A;",
@@ -87,9 +90,13 @@ print(schema2.binary_to_json(schema2.json_to_binary('{"x": 1}')))
 
 ### `ark_fbs.Options`
 
-`Options()` controls how schemas are parsed and how JSON/text is emitted.
+`Options(...)` controls how schemas are parsed and how JSON/text is emitted.
 
-Fields (all are `bool`):
+Constructor (keyword-only):
+
+- `Options(*, strict_json: bool = True, natural_utf8: bool = True, defaults_json: bool = True, size_prefixed: bool = False, output_enum_identifiers: bool = True)`
+
+Fields (all are `bool`, same defaults as constructor):
 
 - `strict_json` (default `True`): Require strict JSON input when parsing JSON.
 - `natural_utf8` (default `True`): Emit/interpret UTF-8 in a “natural” way (FlatBuffers option).

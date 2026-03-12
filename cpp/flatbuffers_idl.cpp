@@ -147,7 +147,23 @@ PYBIND11_MODULE(_ark_fbs, m) {
   m.doc() = "FlatBuffers schema parsing + JSON<->binary helpers (C++ Parser)";
 
   py::class_<Options>(m, "Options")
-      .def(py::init<>())
+      .def(
+          py::init([](bool strict_json, bool natural_utf8, bool defaults_json,
+                      bool size_prefixed, bool output_enum_identifiers) {
+            Options options;
+            options.strict_json = strict_json;
+            options.natural_utf8 = natural_utf8;
+            options.defaults_json = defaults_json;
+            options.size_prefixed = size_prefixed;
+            options.output_enum_identifiers = output_enum_identifiers;
+            return options;
+          }),
+          py::kw_only(),
+          py::arg("strict_json") = true,
+          py::arg("natural_utf8") = true,
+          py::arg("defaults_json") = true,
+          py::arg("size_prefixed") = false,
+          py::arg("output_enum_identifiers") = true)
       .def_readwrite("strict_json", &Options::strict_json)
       .def_readwrite("natural_utf8", &Options::natural_utf8)
       .def_readwrite("defaults_json", &Options::defaults_json)
