@@ -2,9 +2,11 @@ name: Build and publish wheels
 
 on:
   push:
+    branches:
+      - "master"
+    tags:
+      - "v*"
   workflow_dispatch:
-  release:
-    types: [published]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -35,75 +37,38 @@ jobs:
           name: sdist
           path: dist/*.tar.gz
 
-  build_wheels_windows:
-    name: Build wheels on windows-latest
-    runs-on: windows-latest
+  build_wheels:
+    name: Build wheels on ${{ matrix.name }}
+    runs-on: ${{ matrix.runs_on }}
     needs: [build_sdist]
-
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          submodules: recursive
-
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v3.4.0
-        env:
-          CIBW_TEST_SKIP: "*"
-          CIBW_ARCHS_WINDOWS: "AMD64 x86"
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: windows
-          path: ./wheelhouse/*.whl
-          retention-days: 1
-
-  build_wheels_windows_arm64:
-    name: Build wheels on windows-11-arm
-    runs-on: windows-11-arm
-    needs: [build_sdist]
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v3.4.0
-        env:
-          CIBW_TEST_SKIP: "*"
-          CIBW_ARCHS_WINDOWS: "ARM64"
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: windows-arm64
-          path: ./wheelhouse/*.whl
-          retention-days: 1
-
-  build_wheels_macos:
-    name: Build wheels on macos-latest
-    runs-on: macos-latest
-    needs: [build_sdist]
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v3.4.0
-        env:
-          CIBW_TEST_SKIP: "*"
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: macos-latest
-          path: ./wheelhouse/*.whl
-          retention-days: 1
-
-  build_manylinux_wheels_ubuntu:
-    name: Build manylinux wheels on ubuntu-latest
-    runs-on: ubuntu-latest
-    needs: [build_sdist]
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - name: windows-latest
+            runs_on: windows-latest
+            artifact_name: windows
+            cibw_archs_windows: "AMD64 x86"
+            cibw_skip: ""
+            setup_qemu: false
+          - name: windows-11-arm
+            runs_on: windows-11-arm
+            artifact_name: windows-arm64
+            cibw_archs_windows: "ARM64"
+            cibw_skip: ""
+            setup_qemu: false
+          - name: macos-latest
+            runs_on: macos-latest
+            artifact_name: macos-latest
+            cibw_archs_windows: ""
+            cibw_skip: ""
+            setup_qemu: false
+          - name: ubuntu-latest
+            runs_on: ubuntu-latest
+            artifact_name: manylinux
+            cibw_archs_windows: ""
+            cibw_skip: "*-musllinux*"
+            setup_qemu: true
 
     steps:
       - uses: actions/checkout@v6
@@ -111,6 +76,7 @@ jobs:
           submodules: recursive
 
       - name: Set up QEMU
+        if: ${{ matrix.setup_qemu }}
         uses: docker/setup-qemu-action@v4
         with:
           platforms: all
@@ -119,19 +85,20 @@ jobs:
         uses: pypa/cibuildwheel@v3.4.0
         env:
           CIBW_TEST_SKIP: "*"
-          CIBW_SKIP: "*-musllinux*"
+          CIBW_ARCHS_WINDOWS: ${{ matrix.cibw_archs_windows }}
+          CIBW_SKIP: ${{ matrix.cibw_skip }}
 
       - uses: actions/upload-artifact@v7
         with:
-          name: manylinux
+          name: ${{ matrix.artifact_name }}
           path: ./wheelhouse/*.whl
           retention-days: 1
 
   publish:
-    if: github.event_name == 'release'
     name: Publish to PyPI
-    needs: [build_sdist, build_wheels_windows, build_wheels_windows_arm64, build_wheels_macos, build_manylinux_wheels_ubuntu]
     runs-on: ubuntu-latest
+    needs: [build_sdist, build_wheels]
+    if: ${{ success() && startsWith(github.ref, 'refs/tags/v') }}
     permissions:
       id-token: write
 
