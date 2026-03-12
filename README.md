@@ -95,7 +95,7 @@ Fields (all are `bool`):
 - `natural_utf8` (default `True`): Emit/interpret UTF-8 in a “natural” way (FlatBuffers option).
 - `defaults_json` (default `True`): Include default scalar values in emitted JSON.
 - `size_prefixed` (default `False`): Treat binary buffers as size-prefixed.
-- `output_enum_identifiers` (default `False`): Output enum identifiers rather than numeric values.
+- `output_enum_identifiers` (default `True`): Output enum identifiers rather than numeric values.
 
 ### `ark_fbs.Schema`
 

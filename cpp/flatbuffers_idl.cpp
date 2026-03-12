@@ -18,7 +18,7 @@ struct Options {
   bool natural_utf8 = true;
   bool defaults_json = true;
   bool size_prefixed = false;
-  bool output_enum_identifiers = false;
+  bool output_enum_identifiers = true;
 };
 
 flatbuffers::IDLOptions ToIdlOptions(const Options &o) {
