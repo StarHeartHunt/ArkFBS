@@ -22,3 +22,6 @@ jobs:
         uses: pypa/cibuildwheel@v3.4.0
         env:
           CIBW_TEST_SKIP: "*"
+          CIBW_ENABLE: cpython-freethreading
+          CIBW_BUILD: cp314t-win_arm64
+          CIBW_ARCHS_WINDOWS: ARM64
