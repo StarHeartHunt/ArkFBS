@@ -30,14 +30,54 @@ jobs:
           name: sdist
           path: dist/*.tar.gz
 
-  build_wheels:
-    name: Build wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+  build_wheels_windows:
+    name: Build wheels on windows-latest
+    runs-on: windows-latest
     needs: [build_sdist]
-    strategy:
-      fail-fast: true
-      matrix:
-        os: [windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v3.4.0
+        env:
+          CIBW_TEST_SKIP: "*"
+          CIBW_ARCHS_WINDOWS: "AMD64 x86"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: ./wheelhouse/*.whl
+          retention-days: 1
+
+  build_wheels_windows_arm64:
+    name: Build wheels on windows-11-arm
+    runs-on: windows-11-arm
+    needs: [build_sdist]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v3.4.0
+        env:
+          CIBW_TEST_SKIP: "*"
+          CIBW_ARCHS_WINDOWS: "ARM64"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-arm64
+          path: ./wheelhouse/*.whl
+          retention-days: 1
+
+  build_wheels_macos:
+    name: Build wheels on macos-latest
+    runs-on: macos-latest
+    needs: [build_sdist]
 
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +91,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}
+          name: macos-latest
           path: ./wheelhouse/*.whl
           retention-days: 1
 
@@ -85,7 +125,7 @@ jobs:
   publish:
     if: github.event_name == 'release'
     name: Publish to PyPI
-    needs: [build_sdist, build_wheels, build_manylinux_wheels_ubuntu]
+    needs: [build_sdist, build_wheels_windows, build_wheels_windows_arm64, build_wheels_macos, build_manylinux_wheels_ubuntu]
     runs-on: ubuntu-latest
     permissions:
       id-token: write

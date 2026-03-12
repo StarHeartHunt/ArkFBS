@@ -8,36 +8,6 @@ set(ARK_FBS_FLATBUFFERS_SOURCE_DIR "" CACHE PATH
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# CMake excludes free-threaded Python from the default ABI search. On Windows
-# cross-compilation, that leads FindPython to look for pythonXY.lib instead of
-# pythonXYt.lib for cp3xyt targets. Allow either ABI, and if scikit-build-core
-# already provided a target Python root, point FindPython directly at the
-# free-threaded import library.
-if(WIN32)
-  set(Python_FIND_ABI "ANY" "ANY" "ANY" "ANY")
-
-  if(DEFINED SKBUILD_SOABI AND SKBUILD_SOABI MATCHES "^cp([0-9]+)t-")
-    if(NOT DEFINED Python_ROOT_DIR AND DEFINED ENV{pythonLocation})
-      set(Python_ROOT_DIR "$ENV{pythonLocation}")
-    endif()
-
-    if(DEFINED Python_ROOT_DIR)
-      set(_ark_fbs_python_ft_lib "${Python_ROOT_DIR}/libs/python${CMAKE_MATCH_1}t.lib")
-      if(EXISTS "${_ark_fbs_python_ft_lib}")
-        set(Python_LIBRARY "${_ark_fbs_python_ft_lib}")
-        set(Python_LIBRARY_RELEASE "${_ark_fbs_python_ft_lib}")
-      endif()
-      unset(_ark_fbs_python_ft_lib)
-    endif()
-  endif()
-endif()
-
-message(STATUS "SKBUILD_SOABI=${SKBUILD_SOABI}")
-message(STATUS "Python_ROOT_DIR=${Python_ROOT_DIR}")
-message(STATUS "Python_LIBRARY=${Python_LIBRARY}")
-message(STATUS "Python_LIBRARY_RELEASE=${Python_LIBRARY_RELEASE}")
-message(STATUS "Python_FIND_ABI=${Python_FIND_ABI}")
-
 set(PYBIND11_FINDPYTHON ON)
 find_package(pybind11 CONFIG REQUIRED)
 
