@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # looked up as python314.lib instead of python314t.lib. Detect via SKBUILD_SOABI
 # (set by scikit-build-core before CMake runs) and opt in explicitly.
 if(DEFINED SKBUILD_SOABI)
-  string(REGEX MATCH "cp[0-9]+t-" _is_free_threaded "${SKBUILD_SOABI}")
+  string(REGEX MATCH "[0-9]+t[-.]" _is_free_threaded "${SKBUILD_SOABI}")
   if(_is_free_threaded)
     set(Python_FIND_ABI "ANY" "ANY" "ANY" "ON")
   endif()
